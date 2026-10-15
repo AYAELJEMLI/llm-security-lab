@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard de supervision</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f4f5f7; color: #1c1e21; padding: 24px; }
+    h1 { margin-top: 0; }
+    .cartes { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .carte { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 22px; min-width: 220px; }
+    .carte .n { font-size: 32px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+    th { background: #f9fafb; }
+    a { color: #2563eb; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard de supervision</h1>
+  <p><a href="{{ url_for('accueil') }}">Retour au chatbot</a></p>
+  <div class="cartes">
+    <div class="carte"><div class="n">{{ total_llm0102 }}</div>Données sensibles interceptées (LLM01/LLM02)</div>
+    <div class="carte"><div class="n">{{ total_llm07 }}</div>Fuites de structure interceptées (LLM07)</div>
+  </div>
+  {% if incidents %}
+  <table>
+    <tr><th>Date</th><th>Type</th><th>Message utilisateur</th></tr>
+    {% for i in incidents %}
+    <tr><td>{{ i.date }}</td><td>{{ i.type }}</td><td>{{ i.message }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>Aucun incident enregistré.</p>
+  {% endif %}
+</body>
+</html>

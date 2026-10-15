@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BankDemo, chatbot de test</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; display: flex; height: 100vh; background: #f4f5f7; color: #1c1e21; }
+    aside { width: 260px; background: #1f2937; color: #e5e7eb; padding: 16px; overflow-y: auto; }
+    aside h2 { font-size: 15px; margin: 0 0 12px; }
+    aside a { display: block; color: #e5e7eb; text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 14px; margin-bottom: 4px; }
+    aside a:hover, aside a.actif { background: #374151; }
+    aside .nouvelle { background: #2563eb; text-align: center; margin-bottom: 14px; }
+    aside .liens { margin-top: 18px; border-top: 1px solid #374151; padding-top: 12px; }
+    main { flex: 1; display: flex; flex-direction: column; }
+    header { padding: 14px 20px; background: #fff; border-bottom: 1px solid #e5e7eb; font-weight: 600; }
+    .fil { flex: 1; overflow-y: auto; padding: 20px; }
+    .msg { max-width: 720px; margin: 0 auto 14px; padding: 12px 14px; border-radius: 10px; white-space: pre-wrap; line-height: 1.45; }
+    .user { background: #dbeafe; }
+    .assistant { background: #fff; border: 1px solid #e5e7eb; }
+    .vide { text-align: center; color: #6b7280; margin-top: 80px; }
+    form { display: flex; gap: 8px; padding: 14px 20px; background: #fff; border-top: 1px solid #e5e7eb; }
+    textarea { flex: 1; resize: none; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font: inherit; }
+    button { padding: 0 18px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; font: inherit; cursor: pointer; }
+    .avert { font-size: 12px; color: #6b7280; text-align: center; padding: 6px; }
+  </style>
+</head>
+<body>
+  <aside>
+    <h2>BankDemo</h2>
+    <a class="nouvelle" href="{{ url_for('nouvelle_conversation') }}">+ Nouvelle discussion</a>
+    {% for id, conv in conversations.items() %}
+      <a class="{{ 'actif' if id == conv_id else '' }}" href="{{ url_for('voir_conversation', conv_id=id) }}">{{ conv.titre }}</a>
+    {% endfor %}
+    <div class="liens"><a href="{{ url_for('dashboard.dashboard') }}">Dashboard de supervision</a></div>
+  </aside>
+  <main>
+    <header>Assistant virtuel BankDemo (environnement de test)</header>
+    <div class="fil">
+      {% if not conv_id %}
+        <p class="vide">Clique sur « Nouvelle discussion » pour commencer.</p>
+      {% elif not messages %}
+        <p class="vide">Pose ta première question.</p>
+      {% endif %}
+      {% for m in messages %}
+        <div class="msg {{ m.role }}">{{ m.content }}</div>
+      {% endfor %}
+    </div>
+    {% if conv_id %}
+    <form method="post" action="{{ url_for('envoyer_message', conv_id=conv_id) }}">
+      <textarea name="message" rows="2" placeholder="Écris ton message..." required></textarea>
+      <button type="submit">Envoyer</button>
+    </form>
+    {% endif %}
+    <div class="avert">Lab pédagogique : données entièrement fictives.</div>
+  </main>
+</body>
+</html>
